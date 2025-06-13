@@ -1,0 +1,42 @@
+package com.example.bookinventorymanager.controller;
+
+import com.example.bookinventorymanager.model.Book;
+import com.example.bookinventorymanager.repository.BookRepository;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+public class BookController {
+
+    private final BookRepository bookRepo;
+
+    public BookController(BookRepository bookRepo) {
+        this.bookRepo = bookRepo;
+    }
+
+    @GetMapping("/books")
+    public List<Book> getAllBooks() {
+        return bookRepo.findAll();
+    }
+
+    @GetMapping("/book/{id}")
+    public Book getBookById(@PathVariable Long id) {
+        return bookRepo.findById(id).orElse(null);
+    }
+
+    @GetMapping("/books/author/{name}")
+    public List<Book> getBooksByAuthor(@PathVariable String name) {
+        return bookRepo.findByAuthor(name);
+    }
+
+    @GetMapping("/books/available")
+    public List<Book> getAvailableBooks() {
+        return bookRepo.findByAvailableTrue();
+    }
+
+    @PostMapping("/book")
+    public Book addBook(@RequestBody Book book) {
+        return bookRepo.save(book);
+    }
+}
